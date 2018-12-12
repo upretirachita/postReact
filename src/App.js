@@ -55,26 +55,24 @@ class App extends Component {
       infos: [...this.state.infos],
       flag: true
     });
-    console.log(this.state.infos.splice(2, 1));
+    console.log(this.state.infos);
     /*  <!––<Route path="/post"   component={Post} render ={()=>(<Post getFirstInfo = {this.getFirstInfo} /> )} /> 
               ––>*/
   };
-
-  /*
-  addIncomes = () => {
+  deletefirstInfo = () => {
     let data = {
       title: this.state.inputTitle,
-      category: this.state.inputCategory,
-      id: this.state.id
+      category: this.state.selectOption,
+      idOutput: generateID(),
+      content: this.state.inputContent
     };
     this.state.infos.push(data);
     this.setState({
-      infos: [...this.state.infos],
+      infos: [...this.state.infos.splice(0, 2)],
       flag: true
     });
-    console.log("incomes ", this.state.infos);
   };
-*/
+
   inputTitle = e => {
     this.setState({
       inputTitle: e.target.value
@@ -107,22 +105,27 @@ class App extends Component {
               )}
             />
             <div className="input-Post">
-              <button onClick={this.getFirstInfo}>Add Post</button>
-              <button>Delete Post</button>
-              <select
-                name="selectOption"
-                value={this.state.selectOption}
-                onChange={this.handleChange}
-              >
-                <option value="work">Work</option>
-                <option value="speech">Speech</option>
-                <option value="recreation">Recreation</option>
-                <option value="sport">Sport</option>
-              </select>
-              Title:
-              <input type="text" onChange={this.inputTitle} />
-              Category:
-              <input value={this.state.selectOption} />
+              <div className="input-button">
+                <button onClick={this.getFirstInfo}>Add Post</button>
+                <button>Save Post</button>
+                <button onClick={this.deletefirstInfo}> Delete Post</button>
+              </div>
+              <div className="input-data">
+                <select
+                  name="selectOption"
+                  value={this.state.selectOption}
+                  onChange={this.handleChange}
+                >
+                  <option value="Work">Work</option>
+                  <option value="Speech">Speech</option>
+                  <option value="Recreation">Recreation</option>
+                  <option value="Sport">Sport</option>
+                </select>
+                Title:
+                <input type="text" onChange={this.inputTitle} />
+                Category:
+                <input value={this.state.selectOption} />
+              </div>
               Content:
               <textarea
                 rows="10"

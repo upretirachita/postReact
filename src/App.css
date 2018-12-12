@@ -66,13 +66,17 @@
 .input-Post input
 { 
   width:20%;
+  border: 2px solid #e9e9e9;
+}
+.input-Post select
+{ 
+  width:20%;
   align-items: left;
   border: 2px solid #e9e9e9;
 }
 .input-Post button
 { 
   width:20%;
-  align-items: left;
   border: 2px solid #e9e9e9;
 }
 .Post-info{
