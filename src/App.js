@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import Home from "./components/Home";
-import Post from "./components/Post";
-import { BrowserRouter as Router, Link, Route } from "react-router-dom";
+import Posts from "./components/Posts";
+import NewPost from "./components/NewPost";
+import PostDetail from "./components/PostDetail";
+import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import "./App.css";
 
 function generateID() {
   var number = Math.random();
   number.toString(10);
-  var idOutput = number.toString(10).substr(2, 7);
-  return idOutput;
+  var postId = number.toString(10).substr(2, 7);
+  return postId;
 }
 
 class App extends Component {
@@ -17,17 +19,18 @@ class App extends Component {
     inputCategory: "",
     inputContent: "",
     selectOption: "",
+    deletedData: "",
     infos: [
       {
         title: "My day in Inegrify",
         category: "work",
-        idOutput: "01A",
+        postId: "01A",
         content: "Welcome to world of happiness"
       },
       {
         title: "My talk at React Meetup",
         category: "Speech",
-        idOutput: "05b",
+        postId: "05b",
         content: "Welcome to world of happiness"
       }
     ],
@@ -47,7 +50,7 @@ class App extends Component {
     let data = {
       title: this.state.inputTitle,
       category: this.state.selectOption,
-      idOutput: generateID(),
+      postId: generateID(),
       content: this.state.inputContent
     };
     this.state.infos.push(data);
@@ -59,20 +62,32 @@ class App extends Component {
     /*  <!––<Route path="/post"   component={Post} render ={()=>(<Post getFirstInfo = {this.getFirstInfo} /> )} /> 
               ––>*/
   };
+  editInfo = () => {};
+
   deletefirstInfo = () => {
     let data = {
       title: this.state.inputTitle,
       category: this.state.selectOption,
-      idOutput: generateID(),
+      postId: generateID(),
       content: this.state.inputContent
     };
     this.state.infos.push(data);
     this.setState({
-      infos: [...this.state.infos.splice(0, 2)],
+      infos: [...this.state.infos.splice(this.state.postId, 2)],
       flag: true
     });
   };
-
+  /*
+  deletefirstInfo = () => {
+    const deletedData = this.state.infos.filter(info => {
+      return info.splice(this.state.postId , 1);
+    });
+    this.setState({
+      deletedData,
+      flag: false
+    });
+  };
+*/
   inputTitle = e => {
     this.setState({
       inputTitle: e.target.value
@@ -95,57 +110,51 @@ class App extends Component {
           <div>
             <nav>
               <Link to="/">Home</Link>
-              <Link to="/post">Post </Link>
+              <Link to="/posts">Post </Link>
             </nav>
-            <Route exact path="/" component={Home} />
-            <Route
-              path="/post"
-              render={props => (
-                <Post {...props} getFirstInfo={this.getFirstInfo} />
-              )}
-            />
-            <div className="input-Post">
-              <div className="input-button">
-                <button onClick={this.getFirstInfo}>Add Post</button>
-                <button>Save Post</button>
-                <button onClick={this.deletefirstInfo}> Delete Post</button>
-              </div>
-              <div className="input-data">
-                <select
-                  name="selectOption"
-                  value={this.state.selectOption}
-                  onChange={this.handleChange}
-                >
-                  <option value="Work">Work</option>
-                  <option value="Speech">Speech</option>
-                  <option value="Recreation">Recreation</option>
-                  <option value="Sport">Sport</option>
-                </select>
-                Title:
-                <input type="text" onChange={this.inputTitle} />
-                Category:
-                <input value={this.state.selectOption} />
-              </div>
-              Content:
-              <textarea
-                rows="10"
-                cols="70"
-                name="message"
-                onChange={this.inputContent}
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route
+                path="/posts"
+                render={props => (
+                  <Posts
+                    path="/posts/:postId"
+                    {...props}
+                    infos={this.state.infos}
+                    deletefirstInfo={this.deletefirstInfo}
+                    editInfo={this.editInfo}
+                  />
+                )}
               />
-            </div>
-            <div className="users-output">
-              {this.state.infos.map((info, i) => {
-                return (
-                  <div key={"id-" + i}>
-                    <span>Title:{info.title}</span>
-                    <span> Category:{info.category}</span>
-                    <span> ID:{info.idOutput}</span>
-                    <p> Content:{info.content}</p>
-                  </div>
-                );
-              })}
-            </div>
+              <Route
+                path="/newpost"
+                render={props => (
+                  <NewPost
+                    {...props}
+                    name="selectOption"
+                    getFirstInfo={this.getFirstInfo}
+                    editInfo={this.editInfo}
+                    selectOption={this.state.selectOption}
+                    handleChange={this.handleChange}
+                    inputTitle={this.inputTitle}
+                    inputContent={this.inputContent}
+                    deletefirstInfo={this.deletefirstInfo}
+                    infos={this.state.infos}
+                  />
+                )}
+              />
+              <Route
+                path="/:postId"
+                render={props => (
+                  <PostDetail
+                    {...props}
+                    infos={this.state.infos}
+                    deletefirstInfo={this.deletefirstInfo}
+                    editInfo={this.editInfo}
+                  />
+                )}
+              />
+            </Switch>
           </div>
         </Router>
       </div>
