@@ -3,20 +3,20 @@ import { Link } from "react-router-dom";
 
 const Posts = props => {
   // let {match} = props
-  console.log(props);
 
   return (
     <div className="Post-main">
       <ul>
         <li>
-          <Link to="/newpost">New Post</Link>
+          <Link to="/posts/newpost">New Post</Link>
+          <Link to="/posts/postdetail"> Post Detail</Link>
         </li>
       </ul>
 
       <div className="Add-post">
         <div className="Add-post-header">
           <h1> Post Content</h1>
-          <div className="users-output">
+          <div className="post-output">
             {props.infos.map((post, i) => {
               return (
                 <div key={"id-" + i}>

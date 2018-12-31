@@ -3,7 +3,13 @@ import Home from "./components/Home";
 import Posts from "./components/Posts";
 import NewPost from "./components/NewPost";
 import PostDetail from "./components/PostDetail";
-import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+  Switch,
+  withRouter
+} from "react-router-dom";
 import "./App.css";
 
 function generateID() {
@@ -64,35 +70,15 @@ class App extends Component {
   };
   editInfo = () => {};
 
-  deletefirstInfo = () => {
-    let data = {
-      title: this.state.inputTitle,
-      category: this.state.selectOption,
-      postId: generateID(),
-      content: this.state.inputContent
-    };
-    this.state.infos.push(data);
+  deletefirstInfo = postId => {
+    const infos = this.state.infos.filter(info => info.postId !== postId);
+    console.log(infos);
     this.setState({
-      infos: [...this.state.infos.splice(this.state.postId, 2)],
+      infos,
       flag: true
     });
   };
-  /*
-  deletefirstInfo = () => {
-    const deletedData = this.state.infos.filter(info => {
-      return info.splice(this.state.postId , 1);
-    });
-    this.setState({
-      deletedData,
-      flag: false
-    });
-  };
-*/
-  inputTitle = e => {
-    this.setState({
-      inputTitle: e.target.value
-    });
-  };
+
   inputCategory = e => {
     this.setState({
       inputCategory: e.target.value
@@ -103,22 +89,30 @@ class App extends Component {
       inputContent: e.target.value
     });
   };
+  inputTitle = e => {
+    this.setState({
+      inputTitle: e.target.value
+    });
+  };
+
   render() {
+    console.log("test", this.props.history);
     return (
-      <div className="App">
-        <Router>
+      <Router>
+        <div className="App">
           <div>
             <nav>
               <Link to="/">Home</Link>
               <Link to="/posts">Post </Link>
             </nav>
+
             <Switch>
               <Route exact path="/" component={Home} />
               <Route
+                exact
                 path="/posts"
                 render={props => (
                   <Posts
-                    path="/posts/:postId"
                     {...props}
                     infos={this.state.infos}
                     deletefirstInfo={this.deletefirstInfo}
@@ -126,8 +120,10 @@ class App extends Component {
                   />
                 )}
               />
+
               <Route
-                path="/newpost"
+                exact
+                path="/posts/newpost"
                 render={props => (
                   <NewPost
                     {...props}
@@ -144,7 +140,8 @@ class App extends Component {
                 )}
               />
               <Route
-                path="/:postId"
+                exact
+                path="/posts/:postId"
                 render={props => (
                   <PostDetail
                     {...props}
@@ -156,10 +153,10 @@ class App extends Component {
               />
             </Switch>
           </div>
-        </Router>
-      </div>
+        </div>
+      </Router>
     );
   }
 }
 
-export default App;
+export default withRouter(App);

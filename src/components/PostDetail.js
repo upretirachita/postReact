@@ -1,23 +1,32 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const PostDetail = props => {
-  return (
+  let post = props.infos.find(post => {
+    return post.postId === props.match.params.postId && post;
+  });
+
+  const deletePost = () => {
+    props.deletefirstInfo(post.postId);
+    props.history.push("/posts");
+  };
+
+  console.log("post".props);
+  return post ? (
     <div className="New-post">
       <div className="users-output">
-        {props.infos.map((info, i) => {
-          return (
-            <div key={"id-" + i}>
-              <span>Title:{info.title}</span>
-              <span> Category:{info.category}</span>
-              <span> ID:{info.postId}</span>
-              <p> Content:{info.content}</p>
-              <button onClick={props.deletefirstInfo}> Delete Post</button>
-              <button onClick={props.editInfo}>Edit Post</button>
-            </div>
-          );
-        })}
+        <div>
+          <span>Title:{post.title}</span>
+          <span> Category:{post.category}</span>
+          <span> ID:{post.postId}</span>
+          <p> Content:{post.content}</p>
+          <button onClick={deletePost}>Delete Post</button>
+          <button onClick={props.editInfo}>Edit Post</button>
+        </div>
       </div>
     </div>
+  ) : (
+    <Link to="/posts" />
   );
 };
 
